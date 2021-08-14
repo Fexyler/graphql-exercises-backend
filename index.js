@@ -13,7 +13,7 @@ require('dotenv').config();
 const { NODE_ENV } = process.env;
 const PORT = process.env.PORT || 4000;
 
-mongoose.connect(process.env.MONGO_DB_URI, {useNewUrlParser: true, useUnifiedTopology: true})
+mongoose.connect(process.env.MONGO_DB_URI, {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false})
   .then(() => console.log("MongoDB successfully connected"))
   .catch(err => console.log(err));
 
@@ -36,7 +36,7 @@ app.use(compression());
 app.use(cors());
 app.options('*', cors());
 
-async function startServer() {
+(async function () {
   const server = new ApolloServer({typeDefs, resolvers,   plugins: [
     ApolloServerPluginLandingPageGraphQLPlayground({
     })
@@ -44,7 +44,6 @@ async function startServer() {
   await server.start();
   server.applyMiddleware({ app });
   app.listen(PORT, () => {
-    console.log(`Listening on http://localhost:${PORT}/graphql`)
+    console.log(`🚀 Server is ready at http://localhost:${PORT}/graphql`)
   })
-}
-startServer();
+}())
